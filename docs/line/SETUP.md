@@ -48,3 +48,33 @@ For local testing, expose port `3000` with a tunnel such as ngrok or Cloudflare 
 - Replies in Thai as "เฮียโต" using the "ฟิตกับเฮีย" tone
 - Local JSON storage in `storage/fitfit.local.json`
 - No medical diagnosis; injury-related messages receive safety guidance
+
+## Rich Menu
+
+The default LINE rich menu uses:
+
+- Source artwork: `public/assets/line-rich-menu-source.png`
+- Uploaded image: `public/assets/line-rich-menu.jpg`
+- Generator: `server/tools/generate-rich-menu-image.js`
+- LINE setup script: `server/tools/setup-rich-menu.js`
+
+Generate the image only:
+
+```bash
+npm run line:generate-rich-menu
+```
+
+Generate, create the LINE rich menu, upload the image, and set it as default:
+
+```bash
+npm run line:setup-rich-menu
+```
+
+The six tap areas send these message actions to the bot:
+
+- `เริ่มโปรไฟล์`
+- `วันนี้เล่นอะไรดี`
+- `จดการซ้อม`
+- `งบ 120 กินอะไรดี`
+- `โฟกัสกล้าม`
+- `เจ็บหรือปวด ปรับท่าให้หน่อย`

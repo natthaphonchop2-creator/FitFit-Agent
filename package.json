@@ -6,8 +6,10 @@
   "scripts": {
     "dev": "node --watch server/index.js",
     "start": "node server/index.js",
-    "check": "node --check server/index.js && node --check server/trainer.js && node --check public/app.js",
-    "line:bot-info": "node server/tools/line-info.js"
+    "check": "node --check server/index.js && node --check server/trainer.js && node --check server/tools/line-info.js && node --check server/tools/generate-rich-menu-image.js && node --check server/tools/setup-rich-menu.js && node --check public/app.js",
+    "line:bot-info": "node server/tools/line-info.js",
+    "line:generate-rich-menu": "node server/tools/generate-rich-menu-image.js",
+    "line:setup-rich-menu": "npm run line:generate-rich-menu && node server/tools/setup-rich-menu.js"
   },
   "dependencies": {
     "dotenv": "^16.4.7",
@@ -15,5 +17,8 @@
   },
   "engines": {
     "node": ">=20"
+  },
+  "devDependencies": {
+    "sharp": "^0.35.2"
   }
 }

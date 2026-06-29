@@ -89,6 +89,10 @@ export function createTrainerReply(text, userState = {}) {
     return workoutReply(profile);
   }
 
+  if (hasAny(message, ["จดการซ้อม", "บันทึกการซ้อม"])) {
+    return logPromptReply();
+  }
+
   if (hasAny(message, ["จด", "บันทึก", "เซ็ต", "ครั้ง", "kg", "กิโล", "reps"])) {
     return logReply(text);
   }
@@ -121,6 +125,15 @@ export function parseWorkoutLog(text) {
     rawText: text,
     createdAt: new Date().toISOString()
   };
+}
+
+export function shouldPersistWorkoutLog(text) {
+  const message = normalizeText(text);
+  if (!message || hasAny(message, ["จดการซ้อม", "บันทึกการซ้อม"])) {
+    return false;
+  }
+
+  return ["จด", "บันทึก", "เซ็ต", "ครั้ง", "kg", "กิโล", "reps"].some((keyword) => message.includes(keyword));
 }
 
 function introReply() {
@@ -168,6 +181,16 @@ function logReply(text) {
     `รายการ: ${text}`,
     "",
     "ถ้าต้องการละเอียดขึ้น พิมพ์แบบนี้ได้: จด สควอต 15 ครั้ง 3 เซ็ต เหนื่อย 7/10"
+  ].join("\n");
+}
+
+function logPromptReply() {
+  return [
+    "ได้ครับ ส่งรายการซ้อมมาได้เลย เดี๋ยวเฮียโตจดให้",
+    "",
+    "ตัวอย่าง:",
+    "จด วิดพื้น 12 ครั้ง 3 เซ็ต เหนื่อย 7/10",
+    "จด สควอต 15 ครั้ง 4 เซ็ต น้ำหนักตัว"
   ].join("\n");
 }
 

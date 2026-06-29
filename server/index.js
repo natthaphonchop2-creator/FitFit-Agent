@@ -4,7 +4,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import dotenv from "dotenv";
 import express from "express";
-import { createTrainerReply, parseWorkoutLog } from "./trainer.js";
+import { createTrainerReply, parseWorkoutLog, shouldPersistWorkoutLog } from "./trainer.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -72,7 +72,7 @@ async function handleLineEvent(event) {
   await appendUserLog(userId, {
     input: text,
     reply: replyText,
-    workoutLog: shouldSaveWorkout(text) ? parseWorkoutLog(text) : null
+    workoutLog: shouldPersistWorkoutLog(text) ? parseWorkoutLog(text) : null
   });
 
   if (event.replyToken) {
@@ -141,11 +141,6 @@ async function readStore() {
 async function writeStore(store) {
   await fs.mkdir(path.dirname(storagePath), { recursive: true });
   await fs.writeFile(storagePath, `${JSON.stringify(store, null, 2)}\n`);
-}
-
-function shouldSaveWorkout(text) {
-  const normalized = String(text || "").toLowerCase();
-  return ["จด", "บันทึก", "เซ็ต", "ครั้ง", "kg", "กิโล", "reps"].some((keyword) => normalized.includes(keyword));
 }
 
 app.listen(port, () => {
