@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="เฮียโต FitFit">
+  <circle cx="32" cy="32" r="30" fill="#18b957"/>
+  <path fill="#fff" d="M17 19h30v8H35v6h9v7h-9v8H25V27h-8z"/>
+  <path fill="#fff" d="M38 41h10v7H38z" opacity=".92"/>
+  <circle cx="21" cy="45" r="4" fill="#ffd43b"/>
+</svg>

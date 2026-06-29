@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="ฟิตกับเฮียโต AI เทรนเนอร์ส่วนตัวบน LINE จด workout แนะนำตาราง และช่วยเลือกอาหารตามงบ" />
+    <title>ฟิตกับเฮียโต - AI เทรนเนอร์ส่วนตัวบน LINE</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <svg class="icon-sprite" aria-hidden="true">
+      <symbol id="icon-calendar-x" viewBox="0 0 64 64">
+        <rect x="10" y="14" width="44" height="40" rx="8" fill="#fff" stroke="currentColor" stroke-width="4"/>
+        <path d="M10 25h44M22 10v10M42 10v10" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+        <circle cx="32" cy="39" r="10" fill="#fff1eb" stroke="#ff5b1f" stroke-width="3"/>
+        <path d="m28 35 8 8m0-8-8 8" stroke="#ff5b1f" stroke-width="4" stroke-linecap="round"/>
+      </symbol>
+      <symbol id="icon-food-question" viewBox="0 0 64 64">
+        <path d="M14 34h36c-2 12-9 18-18 18s-16-6-18-18Z" fill="#fff" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
+        <path d="M20 31c3-8 9-12 18-12 3 0 6 1 9 2" fill="none" stroke="#18b957" stroke-width="4" stroke-linecap="round"/>
+        <circle cx="47" cy="22" r="11" fill="#fff5ef" stroke="#ff5b1f" stroke-width="3"/>
+        <path d="M43 19c1-3 7-3 8 0 1 4-4 4-4 7" fill="none" stroke="#ff5b1f" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="47" cy="30" r="1.8" fill="#ff5b1f"/>
+      </symbol>
+      <symbol id="icon-note-pen" viewBox="0 0 64 64">
+        <rect x="13" y="10" width="34" height="44" rx="7" fill="#fff" stroke="currentColor" stroke-width="4"/>
+        <path d="M22 22h14M22 32h12M22 42h8" stroke="#18b957" stroke-width="4" stroke-linecap="round"/>
+        <path d="m42 42 12-12 5 5-12 12-8 3 3-8Z" fill="#fff5ef" stroke="#ff5b1f" stroke-width="3" stroke-linejoin="round"/>
+      </symbol>
+      <symbol id="icon-chart-down" viewBox="0 0 64 64">
+        <rect x="12" y="12" width="40" height="40" rx="8" fill="#fff" stroke="currentColor" stroke-width="4"/>
+        <path d="M20 40 30 30l8 8 8-13" fill="none" stroke="#ff5b1f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M42 25h8v8" fill="none" stroke="#18b957" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+      </symbol>
+      <symbol id="icon-chat" viewBox="0 0 64 64">
+        <path d="M12 18c0-6 5-10 11-10h19c6 0 11 4 11 10v14c0 6-5 10-11 10H30L18 54v-12c-4-2-6-5-6-10V18Z" fill="#18b957" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
+        <path d="M23 25h18M23 33h12" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+      </symbol>
+      <symbol id="icon-dumbbell" viewBox="0 0 64 64">
+        <path d="M24 32h16" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+        <path d="M10 23h8v18h-8zM46 23h8v18h-8z" fill="#fff" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
+        <path d="M18 19h6v26h-6zM40 19h6v26h-6z" fill="#18b957" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
+      </symbol>
+      <symbol id="icon-bowl" viewBox="0 0 64 64">
+        <path d="M13 34h38c-2 12-9 18-19 18S15 46 13 34Z" fill="#fff" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
+        <path d="M19 31c2-8 7-13 13-13s11 5 13 13" fill="#18b957" stroke="currentColor" stroke-width="4"/>
+        <path d="M26 18c0-5 3-8 6-8s6 3 6 8" fill="none" stroke="#ff5b1f" stroke-width="4" stroke-linecap="round"/>
+      </symbol>
+      <symbol id="icon-checklist" viewBox="0 0 64 64">
+        <rect x="14" y="9" width="36" height="46" rx="7" fill="#fff" stroke="currentColor" stroke-width="4"/>
+        <path d="m22 24 4 4 7-8M22 39l4 4 7-8" fill="none" stroke="#18b957" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M38 25h6M38 40h6" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+      </symbol>
+      <symbol id="icon-bars" viewBox="0 0 64 64">
+        <rect x="14" y="36" width="8" height="16" rx="3" fill="#18b957" stroke="currentColor" stroke-width="3"/>
+        <rect x="28" y="24" width="8" height="28" rx="3" fill="#ffd43b" stroke="currentColor" stroke-width="3"/>
+        <rect x="42" y="14" width="8" height="38" rx="3" fill="#ff5b1f" stroke="currentColor" stroke-width="3"/>
+        <path d="M10 54h44" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+      </symbol>
+      <symbol id="icon-bell" viewBox="0 0 64 64">
+        <path d="M18 43h28l-4-6V27c0-7-4-12-10-12S22 20 22 27v10l-4 6Z" fill="#ffd43b" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
+        <path d="M27 48c1 4 9 4 10 0" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+        <path d="M46 17 53 10M51 25h8" stroke="#ff5b1f" stroke-width="4" stroke-linecap="round"/>
+      </symbol>
+      <symbol id="icon-qr" viewBox="0 0 64 64">
+        <rect x="10" y="10" width="44" height="44" rx="8" fill="#fff" stroke="currentColor" stroke-width="4"/>
+        <path d="M18 18h10v10H18zM36 18h10v10H36zM18 36h10v10H18z" fill="#18b957"/>
+        <path d="M36 36h5v5h-5zM45 36h4v13h-4zM36 45h5v4h-5z" fill="currentColor"/>
+      </symbol>
+      <symbol id="icon-plan" viewBox="0 0 64 64">
+        <path d="M13 20c0-5 4-8 9-8h20c5 0 9 3 9 8v13c0 5-4 8-9 8H30L19 52V41c-4-1-6-5-6-8V20Z" fill="#18b957" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
+        <path d="M23 27h18M23 34h10" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+        <path d="M47 43h8v8h-8z" fill="#ffd43b" stroke="currentColor" stroke-width="3"/>
+      </symbol>
+      <symbol id="icon-start-chart" viewBox="0 0 64 64">
+        <rect x="11" y="13" width="42" height="34" rx="8" fill="#fff" stroke="currentColor" stroke-width="4"/>
+        <path d="M19 36 29 27l7 6 9-12" fill="none" stroke="#18b957" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M22 54h20M32 47v7" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+        <path d="M44 21h7v7" fill="none" stroke="#ff5b1f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+      </symbol>
+    </svg>
+
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="เฮียโต FitFit">
+        <img class="brand-mark" src="/assets/hia-to-logo.svg" alt="" />
+        <span>
+          <strong>เฮียโต</strong>
+          <small>FitFit</small>
+        </span>
+      </a>
+      <nav class="nav-links" aria-label="เมนูหลัก">
+        <a href="#features">ฟีเจอร์</a>
+        <a href="#how">วิธีใช้งาน</a>
+        <a href="#pricing">ราคา</a>
+        <a href="#faq">คำถาม</a>
+      </nav>
+      <a class="line-button header-cta" href="https://line.me/R/ti/p/@623dwzko" target="_blank" rel="noreferrer">
+        เพิ่มเพื่อน LINE ฟรี
+      </a>
+    </header>
+
+    <main id="top">
+      <section class="hero section">
+        <div class="hero-copy">
+          <h1>
+            <span class="headline-line">ฟิตกับเฮีย!</span>
+            <span class="headline-line accent">หุ่นดี สุขภาพดี</span>
+            <span class="headline-line accent">กับเฮียโต</span>
+          </h1>
+          <p>ทัก LINE แล้วให้เฮียโตช่วยจัดตาราง จดเซ็ต แนะนำท่า และเลือกเมนูตามงบให้เข้ากับเป้าหมายของคุณ</p>
+          <div class="hero-actions">
+            <a class="line-button" href="https://line.me/R/ti/p/@623dwzko" target="_blank" rel="noreferrer">เพิ่มเพื่อน LINE ฟรี</a>
+            <a class="secondary-button" href="#how">ดูวิธีใช้งาน</a>
+          </div>
+          <div class="trust-row" aria-label="จุดเด่น">
+            <span>ใช้งานผ่าน LINE</span>
+            <span>เหมาะกับคนเริ่มต้น</span>
+            <span>ปรับตามงบและเป้าหมาย</span>
+          </div>
+        </div>
+        <div class="hero-visual" aria-label="ตัวอย่างแชทกับเฮียโต">
+          <div class="phone">
+            <div class="phone-top">
+              <span>เฮียโต</span>
+              <span>ออนไลน์</span>
+            </div>
+            <div class="chat-list">
+              <div class="bubble incoming">เฮีย วันนี้เล่นอะไรดี</div>
+              <div class="bubble outgoing">จัดให้! วันนี้ 30 นาที<br />อก + แกนกลาง<br />วิดพื้น 3x10 / แพลงก์ 3x40 วิ</div>
+              <div class="bubble incoming">งบ 120 กินอะไรดี</div>
+              <div class="bubble outgoing">ข้าวอกไก่ + ไข่ต้ม + ผักลวก โปรตีนถึง คุมงบได้</div>
+            </div>
+          </div>
+          <img class="coach" src="/assets/hia-to-arms-crossed-alpha.png" alt="เฮียโต เทรนเนอร์ฟิตเนสท่ากอดอก" />
+          <div class="status-card">
+            <strong>ฟิตกับเฮียโต</strong>
+            <span>จด workout</span>
+            <span>จัดตาราง</span>
+            <span>แนะนำอาหาร</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="problem section">
+        <h2>อยากฟิต แต่ติดเรื่องพวกนี้ไหม?</h2>
+        <div class="problem-grid">
+          <article>
+            <img class="decor-icon" src="/assets/decor/problem-calendar.png" alt="" />
+            <h3>วันนี้ไม่รู้เล่นอะไร</h3>
+            <p>เปิดคลิปไปเรื่อย ๆ แต่ยังไม่รู้ว่าควรเริ่มตรงไหน</p>
+          </article>
+          <article>
+            <img class="decor-icon" src="/assets/decor/problem-food.png" alt="" />
+            <h3>กินไม่รู้จังหวะ</h3>
+            <p>อยากลดไขมันหรือเพิ่มกล้าม แต่เมนูแต่ละวันยังมั่วอยู่</p>
+          </article>
+          <article>
+            <img class="decor-icon" src="/assets/decor/problem-log.png" alt="" />
+            <h3>จดแล้วหาย</h3>
+            <p>เล่นเสร็จแล้วลืมว่าเซ็ตก่อนใช้กี่กิโล เล่นครบไหม</p>
+          </article>
+          <article>
+            <img class="decor-icon" src="/assets/decor/problem-follow.png" alt="" />
+            <h3>ไม่มีคนดันต่อ</h3>
+            <p>เริ่มได้ แต่ทำต่อเนื่องยากเพราะไม่มีใครช่วยดูภาพรวม</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="features section" id="features">
+        <h2>เฮียโตช่วยให้ฟิตง่ายขึ้น</h2>
+        <div class="feature-grid">
+          <article>
+            <img class="decor-icon" src="/assets/decor/feature-chat.png" alt="" />
+            <h3>คุยเหมือนทักเฮีย</h3>
+            <p>พิมพ์ภาษาคนปกติ เฮียโตอ่านแล้วตอบเป็นแผนที่ทำได้จริง</p>
+          </article>
+          <article>
+            <img class="decor-icon" src="/assets/decor/feature-dumbbell.png" alt="" />
+            <h3>เลือกท่าตามของที่มี</h3>
+            <p>มีแค่ตัวเปล่า ดัมเบล หรือไปยิม ก็ปรับท่าให้เข้ากับของที่มี</p>
+          </article>
+          <article>
+            <img class="decor-icon" src="/assets/decor/feature-meal.png" alt="" />
+            <h3>กินให้ตรงเป้าในงบ</h3>
+            <p>บอกงบต่อวัน แล้วให้ไอเดียอาหารไทยที่โปรตีนถึงและทำได้จริง</p>
+          </article>
+          <article>
+            <img class="decor-icon" src="/assets/decor/feature-checklist.png" alt="" />
+            <h3>บันทึกความคืบหน้า</h3>
+            <p>จดเซ็ต ครั้ง น้ำหนัก ความเหนื่อย และประวัติการซ้อมใน LINE</p>
+          </article>
+          <article>
+            <img class="decor-icon" src="/assets/decor/feature-dashboard.png" alt="" />
+            <h3>เห็นภาพรวมร่างกาย</h3>
+            <p>เห็นน้ำหนัก ตาราง กล้ามเนื้อที่โฟกัส และ streak ในที่เดียว</p>
+          </article>
+          <article>
+            <img class="decor-icon" src="/assets/decor/feature-bell.png" alt="" />
+            <h3>เตือนและปรับแผน</h3>
+            <p>ถ้าซ้อมไม่ครบ เจ็บ หรือเวลาน้อยลง เฮียโตช่วยลดโหลดและเปลี่ยนท่า</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="how section" id="how">
+        <h2>เริ่มฟิตกับเฮียใน 3 ขั้นตอน</h2>
+        <div class="steps">
+          <article>
+            <strong>1</strong>
+            <img class="decor-icon step-decor" src="/assets/decor/feature-chat.png" alt="" />
+            <h3>เพิ่มเพื่อนใน LINE</h3>
+            <p>ไม่ต้องโหลดแอพใหม่ ทักหาเฮียโตจาก LINE ที่ใช้ทุกวัน</p>
+          </article>
+          <article>
+            <strong>2</strong>
+            <img class="decor-icon step-decor" src="/assets/decor/problem-log.png" alt="" />
+            <h3>บอกเป้าหมายของคุณ</h3>
+            <p>น้ำหนัก ส่วนสูง เวลา อุปกรณ์ งบอาหาร และข้อจำกัดร่างกาย</p>
+          </article>
+          <article>
+            <strong>3</strong>
+            <img class="decor-icon step-decor" src="/assets/decor/feature-dashboard.png" alt="" />
+            <h3>รับแผนและเริ่มจด</h3>
+            <p>เฮียโตจัดตาราง แนะนำท่า และจดผลให้ต่อเนื่อง</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="dashboard section">
+        <div class="dashboard-copy">
+          <h2>รู้ว่าฟิตขึ้นแค่ไหน ไม่ต้องเดาเอง</h2>
+          <ul>
+            <li>น้ำหนัก รอบเอว และ streak การซ้อม</li>
+            <li>กล้ามเนื้อที่เล่นบ่อย/เล่นน้อย</li>
+            <li>แผนอาหารและงบประมาณต่อวัน</li>
+            <li>ประวัติ workout ล่าสุด</li>
+          </ul>
+          <a class="line-button" href="https://line.me/R/ti/p/@623dwzko" target="_blank" rel="noreferrer">ดูตัวอย่างใน LINE</a>
+        </div>
+        <div class="dashboard-visual">
+          <div class="dashboard-image-frame">
+            <img class="dashboard-image" src="/assets/dashboard-overview.png" alt="ภาพตัวอย่างแดชบอร์ดสรุปความฟิตของเฮียโต" />
+          </div>
+          <div class="dashboard-float top">
+            <strong>3/4 วัน</strong>
+            <span>ซ้อมครบตามแผน</span>
+          </div>
+          <div class="dashboard-float bottom">
+            <strong>86%</strong>
+            <span>โปรตีนเข้าเป้า</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="pricing section" id="pricing">
+        <h2>เริ่มฟรีก่อน ค่อยอัปเมื่ออยากจริงจัง</h2>
+        <div class="pricing-grid">
+          <article>
+            <h3>ฟรี</h3>
+            <p>เริ่มลองกับเฮียโต</p>
+            <strong>฿0 <span>/เดือน</span></strong>
+            <ul>
+              <li>คุยและจด workout พื้นฐาน</li>
+              <li>แนะนำตารางเบื้องต้น</li>
+              <li>เมนูตามงบแบบง่าย</li>
+            </ul>
+            <a href="https://line.me/R/ti/p/@623dwzko" target="_blank" rel="noreferrer">เริ่มใช้ฟรี</a>
+          </article>
+          <article class="highlight">
+            <h3>Pro</h3>
+            <p>สำหรับคนอยากเห็นผลต่อเนื่อง</p>
+            <strong>฿199 <span>/เดือน</span></strong>
+            <ul>
+              <li>ปรับแผนตามประวัติจริง</li>
+              <li>แดชบอร์ดและสรุปรายสัปดาห์</li>
+              <li>วิเคราะห์กล้ามเนื้อที่ขาด</li>
+            </ul>
+            <a href="https://line.me/R/ti/p/@623dwzko" target="_blank" rel="noreferrer">สมัคร Pro</a>
+          </article>
+          <article>
+            <h3>พรีเมียม</h3>
+            <p>สำหรับคนจริงจัง</p>
+            <strong>฿299 <span>/เดือน</span></strong>
+            <ul>
+              <li>ทุกอย่างใน Pro</li>
+              <li>ปรึกษาแผนละเอียดขึ้น</li>
+              <li>ดูแลเป้าหมายเฉพาะบุคคล</li>
+            </ul>
+            <a href="https://line.me/R/ti/p/@623dwzko" target="_blank" rel="noreferrer">สมัครพรีเมียม</a>
+          </article>
+        </div>
+      </section>
+
+      <section class="faq section" id="faq">
+        <h2>คำถามที่พบบ่อย</h2>
+        <div class="faq-list">
+          <details>
+            <summary>ต้องโหลดแอพเพิ่มไหม?</summary>
+            <p>ไม่ต้อง ใช้ผ่าน LINE ได้เลย เพิ่มเพื่อนแล้วเริ่มคุยกับเฮียโตได้ทันที</p>
+          </details>
+          <details>
+            <summary>เฮียโตใช้แทนแพทย์หรือเทรนเนอร์จริงได้ไหม?</summary>
+            <p>ไม่ได้ เฮียโตเป็นผู้ช่วยวางแผนและจดข้อมูล ถ้ามีโรคประจำตัวหรืออาการเจ็บควรปรึกษาผู้เชี่ยวชาญ</p>
+          </details>
+          <details>
+            <summary>ไม่มีอุปกรณ์ใช้ได้ไหม?</summary>
+            <p>ใช้ได้ เฮียโตจัด bodyweight workout ให้ก่อน แล้วค่อยปรับเมื่อมีอุปกรณ์เพิ่ม</p>
+          </details>
+          <details>
+            <summary>ข้อมูลส่วนตัวปลอดภัยไหม?</summary>
+            <p>เวอร์ชันแรกเก็บเฉพาะข้อมูลที่จำเป็นเพื่อพัฒนาแผน และสามารถลบข้อมูลได้เมื่อร้องขอ</p>
+          </details>
+        </div>
+      </section>
+
+      <section class="final-cta">
+        <div>
+          <h2>หุ่นดี สุขภาพดี<br />เริ่มได้วันนี้กับเฮียโต</h2>
+          <p>ทักง่าย จดง่าย มีคนช่วยดูเป้าหมาย ไม่ปล่อยให้หลุดยาว</p>
+          <a class="line-button" href="https://line.me/R/ti/p/@623dwzko" target="_blank" rel="noreferrer">เพิ่มเพื่อน LINE ฟรี</a>
+        </div>
+        <img class="cta-coach" src="/assets/hia-to-mascot-alpha.png" alt="เฮียโตท่ายกนิ้วให้" />
+        <div class="qr-card">
+          <img class="qr-image" src="https://qr-official.line.me/gs/M_623dwzko_BW.png?oat_content=qr" alt="QR Code เพิ่มเพื่อน LINE เฮียโต" />
+          <strong>เพิ่มเพื่อนเฮียโต</strong>
+          <span>สแกนด้วย LINE แล้วเริ่มฟิตกับเฮียได้เลย</span>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div>
+        <a class="footer-brand" href="#top" aria-label="เฮียโต FitFit">
+          <img class="brand-mark" src="/assets/hia-to-logo.svg" alt="" />
+          <span>
+            <strong>เฮียโต</strong>
+            <small>FitFit</small>
+          </span>
+        </a>
+        <p>AI เทรนเนอร์ส่วนตัวบน LINE สำหรับคนที่อยากฟิตแบบทำต่อได้จริง</p>
+      </div>
+      <div>
+        <a href="#features">ฟีเจอร์</a>
+        <a href="#pricing">ราคา</a>
+        <a href="#faq">คำถาม</a>
+      </div>
+    </footer>
+
+    <script src="/app.js" type="module"></script>
+  </body>
+</html>

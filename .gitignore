@@ -1,0 +1,12 @@
+.env
+.env.*
+!.env.example
+
+LINE_CHANNEL_CREDENTIALS.local.md
+docs/*.local.md
+
+node_modules/
+storage/*.json
+.playwright-cli/
+output/
+npm-debug.log*
