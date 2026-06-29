@@ -15,7 +15,7 @@ Health check:
 curl http://localhost:3000/health
 ```
 
-Demo reply without LINE:
+Demo reply status:
 
 ```bash
 curl "http://localhost:3000/api/demo/reply?text=วันนี้เล่นอะไรดี"
@@ -43,11 +43,10 @@ For local testing, expose port `3000` with a tunnel such as ngrok or Cloudflare 
 
 ## Current MVP Behavior
 
-- Text message webhook only
+- Webhook receives LINE events and acknowledges them
 - Signature verification enabled
-- Replies in Thai as "เฮียโต" using the "ฟิตกับเฮีย" tone
-- Local JSON storage in `storage/fitfit.local.json`
-- No medical diagnosis; injury-related messages receive safety guidance
+- Automatic keyword replies are disabled
+- No workout logging or local JSON storage is active
 
 ## Rich Menu
 
