@@ -7,6 +7,13 @@ export function isSupabaseConfigured() {
   return Boolean(supabaseUrl && supabaseServiceRoleKey);
 }
 
+export function getSupabaseConfigStatus() {
+  return {
+    urlConfigured: Boolean(supabaseUrl),
+    serviceRoleKeyConfigured: Boolean(supabaseServiceRoleKey)
+  };
+}
+
 export function getSupabaseAdmin() {
   if (!isSupabaseConfigured()) return null;
 

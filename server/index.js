@@ -3,7 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import dotenv from "dotenv";
 import express from "express";
-import { isSupabaseConfigured } from "./lib/supabase.js";
+import { getSupabaseConfigStatus, isSupabaseConfigured } from "./lib/supabase.js";
 import { recordLineEvent } from "./repositories/customer-store.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -28,11 +28,14 @@ app.use(
 app.use(express.static(path.join(rootDir, "public")));
 
 app.get("/health", (_req, res) => {
+  const supabaseConfig = getSupabaseConfigStatus();
+
   res.json({
     ok: true,
     service: "FitFit เฮียโต",
     lineConfigured: Boolean(channelSecret && channelAccessToken),
-    supabaseConfigured: isSupabaseConfigured()
+    supabaseConfigured: isSupabaseConfigured(),
+    supabaseConfig
   });
 });
 
