@@ -3,6 +3,8 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import dotenv from "dotenv";
 import express from "express";
+import { isSupabaseConfigured } from "./lib/supabase.js";
+import { recordLineEvent } from "./repositories/customer-store.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -29,7 +31,8 @@ app.get("/health", (_req, res) => {
   res.json({
     ok: true,
     service: "FitFit เฮียโต",
-    lineConfigured: Boolean(channelSecret && channelAccessToken)
+    lineConfigured: Boolean(channelSecret && channelAccessToken),
+    supabaseConfigured: isSupabaseConfigured()
   });
 });
 
@@ -58,7 +61,7 @@ app.post("/webhook/line", async (req, res) => {
 });
 
 async function handleLineEvent(event) {
-  return event;
+  await recordLineEvent(event);
 }
 
 function verifyLineSignature(rawBody, signature, secret) {

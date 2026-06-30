@@ -6,12 +6,13 @@
   "scripts": {
     "dev": "node --watch server/index.js",
     "start": "node server/index.js",
-    "check": "node --check server/index.js && node --check server/tools/line-info.js && node --check server/tools/generate-rich-menu-image.js && node --check server/tools/setup-rich-menu.js && node --check public/app.js",
+    "check": "node --check server/index.js && node --check server/lib/supabase.js && node --check server/repositories/customer-store.js && node --check server/tools/line-info.js && node --check server/tools/generate-rich-menu-image.js && node --check server/tools/setup-rich-menu.js && node --check public/app.js",
     "line:bot-info": "node server/tools/line-info.js",
     "line:generate-rich-menu": "node server/tools/generate-rich-menu-image.js",
     "line:setup-rich-menu": "npm run line:generate-rich-menu && node server/tools/setup-rich-menu.js"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.110.0",
     "dotenv": "^16.4.7",
     "express": "^4.21.2"
   },
