@@ -24,7 +24,7 @@ values
     array['injury', 'safety'],
     '{"version":"mvp"}'::jsonb
   )
-on conflict do nothing;
+on conflict (source, title) do nothing;
 
 insert into public.rag_chunks (document_id, chunk_index, content, token_count, metadata)
 select d.id, 0, v.content, v.token_count, v.metadata

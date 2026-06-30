@@ -16,27 +16,43 @@ This project uses Supabase for two data groups:
 ## Required Env Vars
 
 ```bash
-SUPABASE_URL=
+SUPABASE_URL=https://rlffuertznkgbwaffizx.supabase.co
 SUPABASE_SERVICE_ROLE_KEY=
 ```
 
 Add them to `.env.local` for local development and to Render env vars for production.
 
-## Apply Schema
+## FitFit Project
 
-Use a dedicated Supabase project for FitFit, not an unrelated project.
+- Project name: `FitFit`
+- Project ref: `rlffuertznkgbwaffizx`
+- API URL: `https://rlffuertznkgbwaffizx.supabase.co`
+- Region: `ap-northeast-1`
 
-Run the SQL in:
+## Applied Schema
+
+Applied migrations:
 
 ```text
 supabase/migrations/001_fitfit_core.sql
+supabase/migrations/002_fitfit_advisor_fixes.sql
 ```
 
-Optional starter RAG content:
+Applied starter RAG content:
 
 ```text
 supabase/seeds/001_fitfit_rag_seed.sql
 ```
+
+Current verification:
+
+- `rag_documents`: 3 rows
+- `rag_chunks`: 3 rows
+- `customers`: 0 rows
+- `customer_events`: 0 rows
+- `vector` extension: enabled
+- `match_rag_chunks`: installed
+- RLS: enabled on all app tables
 
 After applying it, verify:
 
