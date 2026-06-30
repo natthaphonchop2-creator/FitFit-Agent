@@ -11,21 +11,9 @@ export async function recordLineEvent(event) {
   let customerId = null;
 
   if (lineUserId) {
-    const { data: customer, error: customerError } = await supabase
-      .from("customers")
-      .upsert(
-        {
-          line_user_id: lineUserId,
-          last_seen_at: new Date().toISOString()
-        },
-        { onConflict: "line_user_id" }
-      )
-      .select("id")
-      .single();
+    const customer = await ensureCustomerForLineUser(lineUserId);
 
-    if (customerError) {
-      console.error("Supabase customer upsert failed", customerError.message);
-    } else {
+    if (customer) {
       customerId = customer.id;
     }
   }
@@ -45,6 +33,72 @@ export async function recordLineEvent(event) {
   }
 
   return { skipped: false, customerId };
+}
+
+export async function ensureCustomerForLineUser(lineUserId) {
+  if (!lineUserId || !isSupabaseConfigured()) return null;
+
+  const supabase = getSupabaseAdmin();
+  const { data: customer, error } = await supabase
+    .from("customers")
+    .upsert(
+      {
+        line_user_id: lineUserId,
+        last_seen_at: new Date().toISOString()
+      },
+      { onConflict: "line_user_id" }
+    )
+    .select("id")
+    .single();
+
+  if (error) {
+    console.error("Supabase customer upsert failed", error.message);
+    return null;
+  }
+
+  return customer;
+}
+
+export async function getCustomerProfile(customerId) {
+  if (!customerId || !isSupabaseConfigured()) return null;
+
+  const supabase = getSupabaseAdmin();
+  const { data: profile, error } = await supabase
+    .from("customer_profiles")
+    .select("*")
+    .eq("customer_id", customerId)
+    .maybeSingle();
+
+  if (error) {
+    console.error("Supabase profile lookup failed", error.message);
+    return null;
+  }
+
+  return profile;
+}
+
+export async function upsertCustomerProfile(customerId, values) {
+  if (!customerId || !isSupabaseConfigured()) return null;
+
+  const supabase = getSupabaseAdmin();
+  const { data: profile, error } = await supabase
+    .from("customer_profiles")
+    .upsert(
+      {
+        customer_id: customerId,
+        ...values
+      },
+      { onConflict: "customer_id" }
+    )
+    .select("*")
+    .single();
+
+  if (error) {
+    console.error("Supabase profile upsert failed", error.message);
+    return null;
+  }
+
+  return profile;
 }
 
 function sanitizeLineEvent(event) {

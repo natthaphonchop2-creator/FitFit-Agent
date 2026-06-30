@@ -4,7 +4,9 @@ import { fileURLToPath } from "node:url";
 import dotenv from "dotenv";
 import express from "express";
 import { getSupabaseConfigStatus, isSupabaseConfigured } from "./lib/supabase.js";
+import { replyLineMessage } from "./lib/line-reply.js";
 import { recordLineEvent } from "./repositories/customer-store.js";
+import { buildOnboardingReply } from "./services/onboarding.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -65,6 +67,11 @@ app.post("/webhook/line", async (req, res) => {
 
 async function handleLineEvent(event) {
   await recordLineEvent(event);
+
+  const replyMessages = await buildOnboardingReply(event);
+  if (replyMessages) {
+    await replyLineMessage(channelAccessToken, event.replyToken, replyMessages);
+  }
 }
 
 function verifyLineSignature(rawBody, signature, secret) {
